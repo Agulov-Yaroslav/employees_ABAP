@@ -1,0 +1,55 @@
+*&---------------------------------------------------------------------*
+*& Report ZEMPLOYERS
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT zemployers.
+
+TYPES: BEGIN OF ty_employeer,
+         client  TYPE mandt,
+         id      TYPE n LENGTH 8,
+         surname TYPE c LENGTH 40,
+         name    TYPE c LENGTH 40,
+         title   TYPE c LENGTH 15,
+         dob     TYPE d,
+       END OF ty_employeer.
+
+DATA: lt_employees TYPE TABLE OF ty_employeer,
+      ls_data      LIKE LINE OF lt_employees.
+
+START-OF-SELECTION.
+
+  SELECTION-SCREEN BEGIN OF BLOCK b2 WITH FRAME TITLE TEXT-001.
+
+  PARAMETERS: lv_id    TYPE n LENGTH 8,
+              lv_sname TYPE c LENGTH 40,
+              lv_name  TYPE c LENGTH 40,
+              lv_title TYPE c LENGTH 15,
+              lv_dob   TYPE d.
+
+  SELECTION-SCREEN END OF BLOCK b2.
+
+  DATA: ls_employee TYPE ty_employeer.
+
+  ls_employee-id = lv_id.
+  ls_employee-surname = lv_sname.
+  ls_employee-name = lv_name.
+  ls_employee-title = lv_title.
+  ls_employee-dob = lv_dob.
+
+  INSERT INTO zemployess VALUES ls_employee.
+
+SELECT *
+    INTO TABLE @lt_employees
+    FROM zemployess.
+
+  LOOP AT lt_employees INTO ls_data.
+
+
+    WRITE: / ls_data-id,
+            ls_data-surname,
+            ls_data-name,
+            ls_data-title,
+           ls_data-dob MM/DD/YYYY.
+
+  ENDLOOP.
